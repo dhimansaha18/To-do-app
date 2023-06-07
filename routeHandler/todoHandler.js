@@ -13,6 +13,17 @@ router.get('/:id', async(req, res)=>{
 })
 
 router.post('/', async(req, res)=>{
+    const newTodo = new Todo(req.body);
+    try {
+        await newTodo.save();
+        res.status(200).json({
+          Message: "Todo Was Inserted Successfully",
+        });
+      } catch (error) {
+        res.status(500).json({
+          error: "Server Side Error" + error,
+        });
+      }
     
 })
 
