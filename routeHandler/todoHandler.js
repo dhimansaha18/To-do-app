@@ -5,11 +5,38 @@ const todoSchema=require('../schemas/todoSchema');
 const Todo = new mongoose.model('Todo', todoSchema)
 
 router.get('/', async(req, res)=>{
-
+  try{
+    const data=await Todo.find({
+      "status":"active"
+    }).select({
+      _id: 0,
+      __v: 0
+    });
+    res.status(200).json({
+      result: data,
+    })
+  }
+  catch(err){
+    res.status(500).json({
+      error: "Server Error"+ err,
+    })
+  }
 })
 
 router.get('/:id', async(req, res)=>{
-    
+  try{
+    const data=await Todo.find({
+      _id:req.params.id
+    });
+    res.status(200).json({
+      result: data,
+    })
+  }
+  catch(err){
+    res.status(500).json({
+      error: "Server Error"+ err,
+    })
+  }
 })
 
 router.post('/', async(req, res)=>{
