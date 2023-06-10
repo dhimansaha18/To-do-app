@@ -21,7 +21,7 @@ router.get('/', async(req, res)=>{
       error: "Server Error"+ err,
     })
   }
-})
+});
 
 router.get('/:id', async(req, res)=>{
   try{
@@ -37,7 +37,38 @@ router.get('/:id', async(req, res)=>{
       error: "Server Error"+ err,
     })
   }
-})
+});
+
+router.get("/active", async (req, res) => {
+  const todo = new Todo();
+  const data = await todo.findActive();
+  res.status(200).json({
+    data,
+  });
+});
+
+router.get("/js", async (req, res) => {
+  const data = await Todo.findJs();
+  res.status(200).json({
+    data,
+  });
+});
+
+router.get("/bylanguage", async (req, res) => {
+  const data = await Todo.find().findByLanguage("angular");
+  res.status(200).json({
+    data,
+  });
+});
+
+router.get("/active-callback", (req, res) => {
+  const todo = new Todo();
+  todo.findActiveCallback((err, data) => {
+    res.status(200).json({
+      data,
+    });
+  });
+}); 
 
 router.post('/', async(req, res)=>{
     const newTodo = new Todo(req.body);
@@ -52,7 +83,7 @@ router.post('/', async(req, res)=>{
         });
       }
     
-})
+});
 
 router.post('/all', async(req, res)=>{
     try{
@@ -66,7 +97,7 @@ router.post('/all', async(req, res)=>{
         error: "Server Error"+ err,
       })
     }
-})
+});
 
 router.put('/:id', async(req, res)=>{
     try{
@@ -91,7 +122,7 @@ router.put('/:id', async(req, res)=>{
       })
     }
     
-})
+});
 
 router.delete('/:id', async(req, res)=>{
   try{
@@ -107,6 +138,6 @@ router.delete('/:id', async(req, res)=>{
       error: "Server Error"+ err,
     })
   }
-})
+});
 
 module.exports=router
