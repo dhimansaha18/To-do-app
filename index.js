@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const app = express();
 const todoHandler = require("./routeHandler/todoHandler");
 const userHandler = require("./routeHandler/userHandler")
 
 app.use(express.json());
+dotenv.config();
 
 mongoose
     .connect('mongodb://127.0.0.1/todos',{
