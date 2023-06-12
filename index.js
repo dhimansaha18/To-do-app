@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const todoHandler = require("./routeHandler/todoHandler")
+const todoHandler = require("./routeHandler/todoHandler");
+const userHandler = require("./routeHandler/userHandler")
 
 app.use(express.json());
 
@@ -21,6 +22,7 @@ function errorHandler(err, req, res, next) {
 }
 
 app.use('/todo', todoHandler);
+app.use('/user', userHandler);
 
 app.listen(3000, () => {
     console.log('app is listening on Port 3000');
