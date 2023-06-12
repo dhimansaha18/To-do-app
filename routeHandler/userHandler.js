@@ -28,14 +28,14 @@ router.post('/signup', async(req, res)=>{
 
 router.post("/login", async(req, res) => {
     try {
-        const user = await User.find({ username: req.body.username });
+        const user = await User.find({ userName: req.body.userName });
         if(user && user.length > 0) {
             const isValidPassword = await bcrypt.compare(req.body.password, user[0].password);
 
             if(isValidPassword) {
                 // generate token
                 const token = jwt.sign({
-                    username: user[0].username,
+                    username: user[0].userName,
                     userId: user[0]._id,
                 }, process.env.JWT_SECRET, {
                     expiresIn: '48h'
