@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const mongoose=require('mongoose');
 const todoSchema=require('../schemas/todoSchema');
+const userSchema=require('../schemas/userSchema');
 const Todo = new mongoose.model('Todo', todoSchema);
 const checkLogin = require('../middlewares/checkLogin');
 
 router.get('/', checkLogin, async(req, res)=>{
   try{
-    const data=await Todo.find({
-      "status":"active"
-    }).select({
+    const data=await Todo.find().populate("user", "name userName -_id").
+    select({
       _id: 0,
       __v: 0
     });
@@ -71,19 +71,22 @@ router.get("/active-callback", (req, res) => {
   });
 }); 
 
-router.post('/', async(req, res)=>{
-    const newTodo = new Todo(req.body);
+router.post('/', checkLogin, async(req, res)=>{
+  const newTodo = new Todo({
+    ...req.body,
+    user: req.userId
+  });
     try {
         await newTodo.save();
         res.status(200).json({
           Message: "Todo Was Inserted Successfully",
         });
       } catch (error) {
+        console.log(error)
         res.status(500).json({
           error: "Server Side Error" + error,
         });
       }
-    
 });
 
 router.post('/all', async(req, res)=>{
