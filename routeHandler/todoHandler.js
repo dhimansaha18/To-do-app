@@ -4,6 +4,7 @@ const mongoose=require('mongoose');
 const todoSchema=require('../schemas/todoSchema');
 const userSchema=require('../schemas/userSchema');
 const Todo = new mongoose.model('Todo', todoSchema);
+const User = new mongoose.model('User', userSchema);
 const checkLogin = require('../middlewares/checkLogin');
 
 router.get('/', checkLogin, async(req, res)=>{
@@ -72,12 +73,19 @@ router.get("/active-callback", (req, res) => {
 }); 
 
 router.post('/', checkLogin, async(req, res)=>{
-  const newTodo = new Todo({
-    ...req.body,
-    user: req.userId
-  });
+    const newTodo = new Todo({
+      ...req.body,
+      user: req.userId
+    });
     try {
-        await newTodo.save();
+        const todo = await newTodo.save();
+        await User.updateOne({
+          _id: req.userId
+        }, {
+          $push: {
+            todo: todo._id
+          }
+        });
         res.status(200).json({
           Message: "Todo Was Inserted Successfully",
         });
